@@ -7,8 +7,8 @@ namespace AbilitiesWindow.AbilityUI
     {
         public event Action Selected;
 
-        internal event Action SelectionStatusUpdated;
-        internal event Action LearnedStatusUpdated;
+        public event Action SelectionStatusUpdated;
+        public event Action LearnedStatusUpdated;
 
         private readonly string id;
         private readonly int cost;

@@ -15,6 +15,6 @@ namespace AbilitiesWindow
         [SerializeField] private AbilityConfig[] descendants;
 
         public IEnumerable<string> DescendantsIds => descendants.Select(descendant => descendant.Id);
-        public IEnumerable<AbilityConfig> DescendantConfigs => descendants;
+        public IEnumerable<AbilityConfig> DescendantsConfigs => descendants;
     }
 }

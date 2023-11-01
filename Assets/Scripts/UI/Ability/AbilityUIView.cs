@@ -6,7 +6,7 @@ namespace AbilitiesWindow.AbilityUI
 {
     public class AbilityUIView : View
     {
-        internal event Action Clicked;
+        public event Action Clicked;
 
         [SerializeField] private Text label;
 
@@ -24,12 +24,12 @@ namespace AbilitiesWindow.AbilityUI
             }
         }
 
-        internal void SetText(string text)
+        public void SetText(string text)
         {
             label.text = text;
         }
 
-        internal void SetLearned(bool isLearned)
+        public void SetLearned(bool isLearned)
         {
             if (learnedRoot)
             {
@@ -41,7 +41,7 @@ namespace AbilitiesWindow.AbilityUI
             }
         }
 
-        internal void SetSelected(bool isSelected)
+        public void SetSelected(bool isSelected)
         {
             if (selectedRoot)
             {

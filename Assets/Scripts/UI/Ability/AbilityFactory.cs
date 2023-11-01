@@ -81,7 +81,6 @@ public class AbilityFactory
         var abilityView = Object.Instantiate(config.ViewPrefab, abilitiesRoot);
 
         abilityView.transform.position = GetScreenPositionByGridPosition(gridPosition.Value);
-        abilityView.SetText(config.Id);
 
         var abilityPresenter = new AbilityUIPresenter(abilityModel, abilityView);
         abilityPresenter.Initialize();
@@ -90,7 +89,7 @@ public class AbilityFactory
         abilitiesGridPositions.Add(abilityModel, gridPosition.Value);
         abilityModels.Add(abilityModel);
 
-        foreach (var descendantConfig in config.DescendantConfigs)
+        foreach (var descendantConfig in config.DescendantsConfigs)
         {
             if (!abilitiesGridPositions.Keys.Any(model => model.Id == descendantConfig.Id))
             {

@@ -9,7 +9,7 @@ namespace AbilitiesWindow.AbilityMap
         public event Action<AbilityUIModel> AbilityLearned;
         public event Action<AbilityUIModel> AbilityForgotten;
 
-        internal event Action AbilitySelected;
+        public event Action AbilitySelected;
 
         private AbilityUIModel selectedAbilityModel;
         private IEnumerable<AbilityUIModel> abilityModels;
@@ -21,7 +21,7 @@ namespace AbilitiesWindow.AbilityMap
             this.abilityStatusCalculator = abilityStatusCalculator;
         }
 
-        internal AbilityUIModel SelectedAbilityModel
+        public AbilityUIModel SelectedAbilityModel
         {
             get => selectedAbilityModel;
             set
@@ -43,7 +43,7 @@ namespace AbilitiesWindow.AbilityMap
             UpdateAbilitiesCanForgetStatus();
         }
 
-        internal void SetAbilityModels(IEnumerable<AbilityUIModel> models)
+        public void SetAbilityModels(IEnumerable<AbilityUIModel> models)
         {
             abilityModels = models;
 
@@ -64,7 +64,7 @@ namespace AbilitiesWindow.AbilityMap
             UpdateAbilitiesStatus();
         }
 
-        internal void ForgetSelectedAbility()
+        public void ForgetSelectedAbility()
         {
             if (SelectedAbilityModel != null)
             {
@@ -75,7 +75,7 @@ namespace AbilitiesWindow.AbilityMap
             }
         }
 
-        internal void ForgetAllAbilities()
+        public void ForgetAllAbilities()
         {
             foreach (var abilityModel in abilityModels)
             {
@@ -89,7 +89,7 @@ namespace AbilitiesWindow.AbilityMap
             UpdateAbilitiesStatus();
         }
 
-        internal void LearnSelectedAbility()
+        public void LearnSelectedAbility()
         {
             if (SelectedAbilityModel != null)
             {

@@ -13,6 +13,7 @@ namespace AbilitiesWindow.AbilityUI
 
             view.Clicked += HandleViewClicked;
 
+            view.SetText(model.Id);
             view.SetLearned(model.IsLearned);
         }
 

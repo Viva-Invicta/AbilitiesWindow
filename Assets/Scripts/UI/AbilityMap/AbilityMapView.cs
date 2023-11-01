@@ -11,9 +11,9 @@ namespace AbilitiesWindow.AbilityMap
         [SerializeField] private Button forgetAllButton;
         [SerializeField] private Text costText;
 
-        internal event Action LearnButtonPressed;
-        internal event Action ForgetButtonPressed;
-        internal event Action ForgetAllButtonPressed;
+        public event Action LearnButtonPressed;
+        public event Action ForgetButtonPressed;
+        public event Action ForgetAllButtonPressed;
 
         protected override void InitializeInternal()
         {
@@ -22,17 +22,17 @@ namespace AbilitiesWindow.AbilityMap
             forgetAllButton.onClick.AddListener(() => ForgetAllButtonPressed?.Invoke());
         }
 
-        internal void SetLearnButtonActive(bool isActive)
+        public void SetLearnButtonActive(bool isActive)
         {
             learnButton.interactable = isActive;
         }
 
-        internal void SetForgetButtonActive(bool isActive)
+        public void SetForgetButtonActive(bool isActive)
         {
             forgetButton.interactable = isActive;
         }
 
-        internal void SetCost(int cost) 
+        public void SetCost(int cost) 
         {
             costText.text = cost == 0 ? "-" : cost.ToString();
         }
