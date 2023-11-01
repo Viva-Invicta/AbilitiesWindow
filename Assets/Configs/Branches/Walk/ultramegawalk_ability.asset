@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90bf013e2ab3d4242bef9dfddfeca695, type: 3}
+  m_Name: ultramegawalk_ability
+  m_EditorClassIdentifier: 
+  <Cost>k__BackingField: 10
+  <Id>k__BackingField: ultramegawalk
+  <ViewPrefab>k__BackingField: {fileID: 6835231728843917930, guid: 99f6f0fdea74f3a4992132fb7c81a077, type: 3}
+  descendants:
+  - {fileID: 11400000, guid: 8d189f2c62074504ab6ad3fc00aa9025, type: 2}
