@@ -7,10 +7,11 @@ using AbilitiesWindow.AbilityUI;
 public class AbilityFactory
 {
     private Dictionary<AbilityUIModel, Vector2Int> abilitiesGridPositions = new Dictionary<AbilityUIModel, Vector2Int>();
-
     private List<Vector2Int> descendantsRelativePositions = new List<Vector2Int>();
+
     private HashSet<AbilityConfig> usedAbilityConfigs = new HashSet<AbilityConfig>();
     private HashSet<AbilityUIModel> abilityModels = new HashSet<AbilityUIModel>();
+    private Dictionary<AbilityUIModel, HashSet<AbilityUIModel>> abilitiesDescendants = new Dictionary<AbilityUIModel, HashSet<AbilityUIModel>>();
 
     private readonly Transform abilitiesRoot;
     private readonly Transform connectionsRoot;
@@ -40,7 +41,7 @@ public class AbilityFactory
     public IEnumerable<AbilityUIModel> Create()
     {
         CreateAbilityAndDescendantsFromConfig(startAbilityConfig);
-        FillModelsWithDescendantModels();
+        FillDescendantsDictionary();
         FillModelsWithNeighborModels();
         CreateAbilityConnectionViews();
 
@@ -98,7 +99,7 @@ public class AbilityFactory
         }
     }
 
-    private void FillModelsWithDescendantModels()
+    private void FillDescendantsDictionary()
     {
         foreach (var model in abilityModels)
         {
@@ -108,7 +109,15 @@ public class AbilityFactory
             {
                 if (config.DescendantsIds.Contains(possibleDescendantModel.Id))
                 {
-                    model.AddDescendantModel(possibleDescendantModel);
+                    if (!abilitiesDescendants.ContainsKey(model))
+                    {
+                        abilitiesDescendants
+                            .Add(model, new HashSet<AbilityUIModel> { possibleDescendantModel });
+                    }
+                    else
+                    {
+                        abilitiesDescendants[model].Add(possibleDescendantModel);
+                    } 
                 }
             }
         }
@@ -138,11 +147,11 @@ public class AbilityFactory
     {
         foreach (var model in abilityModels)
         {
-            if (model.DescendantModels != null)
+            if (abilitiesDescendants.ContainsKey(model))
             {
                 var abilityPosition = GetScreenPositionByGridPosition(abilitiesGridPositions[model]);
 
-                foreach (var descendant in model.DescendantModels)
+                foreach (var descendant in abilitiesDescendants[model])
                 {
                     var connection = Object.Instantiate(abilityConnectionViewPrefab, connectionsRoot);
                     var descendantPosition = GetScreenPositionByGridPosition(abilitiesGridPositions[descendant]);

@@ -25,7 +25,6 @@ namespace AbilitiesWindow.AbilityUI
         }
 
         public HashSet<AbilityUIModel> NeighborsModels { get; private set; }
-        public HashSet<AbilityUIModel> DescendantModels { get; private set; }
         public bool CanLearn { get; set; }
         public bool CanForget { get; set; }
 
@@ -61,19 +60,6 @@ namespace AbilitiesWindow.AbilityUI
                         Selected?.Invoke();
                     }
                 }
-            }
-        }
-
-        public void AddDescendantModel(AbilityUIModel model)
-        {
-            if (DescendantModels == null)
-            {
-                DescendantModels = new HashSet<AbilityUIModel>();
-            }   
-            
-            if (!DescendantModels.Contains(model))
-            {
-                DescendantModels.Add(model);
             }
         }
 
