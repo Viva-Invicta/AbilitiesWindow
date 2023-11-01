@@ -49,11 +49,18 @@ namespace AbilitiesWindow.AbilityMap
 
             foreach (var model in abilityModels)
             {
-                model.IsLearned = model.IsStart;
+                if (model.IsStart)
+                {
+                    model.IsLearned = true;
+                    abilityStatusCalculator.SetStartAbility(model);
+                }
+                else
+                {
+                    model.IsLearned = false;
+                }
                 model.Selected += () => HandleAbilitySelected(model);
             }
 
-            abilityStatusCalculator.SetAbilitiesModels(abilityModels);
             UpdateAbilitiesStatus();
         }
 

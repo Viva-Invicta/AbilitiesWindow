@@ -15,4 +15,6 @@ MonoBehaviour:
   <Cost>k__BackingField: 4
   <Id>k__BackingField: walk
   <ViewPrefab>k__BackingField: {fileID: 6835231728843917930, guid: 99f6f0fdea74f3a4992132fb7c81a077, type: 3}
-  descendants: []
+  descendants:
+  - {fileID: 11400000, guid: 545d6549e3f41ec41abf3b89da58b4d5, type: 2}
+  - {fileID: 11400000, guid: 0064c8d47157da7478b8b18cbac4aed0, type: 2}

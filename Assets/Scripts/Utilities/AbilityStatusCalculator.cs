@@ -8,22 +8,18 @@ namespace AbilitiesWindow
     public class AbilityStatusCalculator
     {
         private readonly SkillPointsModel skillPointsModel;
-        private IEnumerable<AbilityUIModel> abilityModels;
-        private AbilityUIModel startAbility;
+        private AbilityUIModel startAbilityModel;
 
         public AbilityStatusCalculator(SkillPointsModel skillPointsModel)
         {
             this.skillPointsModel = skillPointsModel;
         }
 
-        public void SetAbilitiesModels(IEnumerable<AbilityUIModel> abilityModels)
+        public void SetStartAbility(AbilityUIModel startAbilityModel)
         {
-            this.abilityModels = abilityModels;
-            startAbility = abilityModels.FirstOrDefault(ability => ability.IsStart);
+            this.startAbilityModel = startAbilityModel;
         }
 
-        //We can learn ability, if there any learned parent ability
-        //and we have enough points for it 
         public bool CanLearnAbility(AbilityUIModel abilityModel)
         {
             if (abilityModel.IsLearned)
@@ -31,25 +27,12 @@ namespace AbilitiesWindow
                 return false;
             }
 
-            var learnedParentAbilitiesModels = new HashSet<AbilityUIModel>();
-            
-            foreach (var model in abilityModels)
-            {
-                if (model.DescendantModels == null)
-                {
-                    continue;
-                }
+            var hasLearnedNeighbors = abilityModel.NeighborsModels
+                .Any(neighborModel => neighborModel.IsLearned);
 
-                if (model.DescendantModels.Contains(abilityModel) && model.IsLearned)
-                {
-                    learnedParentAbilitiesModels.Add(model);
-                }
-            }
-            return skillPointsModel.Count >= abilityModel.Cost && learnedParentAbilitiesModels.Any();
+            return hasLearnedNeighbors && skillPointsModel.Count >= abilityModel.Cost;
         }
 
-        //We can forget ability, if it has no learned descendants, or if there is other way to its 
-        //learned descendants
         public bool CanForgetAbility(AbilityUIModel abilityModel)
         {
             if (!abilityModel.IsLearned || abilityModel.IsStart)
@@ -57,62 +40,54 @@ namespace AbilitiesWindow
                 return false;
             }
 
-            var descendants = abilityModel.DescendantModels;
-            if (descendants == null)
-            {
-                return true;
-            }
-            var learnedDescendants = descendants.Where(descendant => descendant.IsLearned);
+            var learnedNeighbors = abilityModel.NeighborsModels.Where(neighbor => neighbor.IsLearned && !neighbor.IsStart);
 
-            if (!learnedDescendants.Any())
+            var noOtherWayToAnyLearnedNeighbor = false;
+            foreach (var descendant in learnedNeighbors)
             {
-                return true;
-            }
-
-            var noOtherWayToAnyLearnedDescendant = false;
-            foreach (var descendant in learnedDescendants)
-            {
-                if (!CheckOtherWaysToDescendant(startAbility, abilityModel, descendant))
+                if (!CheckOtherWaysToNeigbor(startAbilityModel, abilityModel, descendant))
                 {
-                    noOtherWayToAnyLearnedDescendant = true;
+                    noOtherWayToAnyLearnedNeighbor = true;
                     break;
                 }
             }
-            return !noOtherWayToAnyLearnedDescendant;
+            return !noOtherWayToAnyLearnedNeighbor;
         }
 
-        //Kind of breadth first search :o
-        private bool CheckOtherWaysToDescendant(AbilityUIModel startAbility, AbilityUIModel excludeFromWay, AbilityUIModel targetAbility)
+        private bool CheckOtherWaysToNeigbor(AbilityUIModel startAbility, AbilityUIModel excludeFromWay, AbilityUIModel targetAbility)
         {
-            var abilitiesToCheck = new List<AbilityUIModel>();
+            var currentFrontier = new List<AbilityUIModel>();
 
-            foreach (var descendant in startAbility.DescendantModels)
+            foreach (var neighbor in startAbility.NeighborsModels)
             {
-                if (descendant.IsLearned && descendant != excludeFromWay)
+                if (neighbor == targetAbility)
                 {
-                    abilitiesToCheck.Add(descendant);
+                    return true;
+                }
+                if (neighbor.IsLearned && neighbor != excludeFromWay)
+                {
+                    currentFrontier.Add(neighbor);
                 }
             }
 
-            while (abilitiesToCheck.Count > 0)
+            var checkedAbilities = currentFrontier;
+
+            while (currentFrontier.Any())
             {
-                if (abilitiesToCheck.Contains(targetAbility))
+                if (currentFrontier.Contains(targetAbility))
                 {
                     return true;
                 }
 
-                abilitiesToCheck.Clear();
-                foreach (var ability in abilitiesToCheck)
-                {
-                    foreach (var descendant in ability.DescendantModels)
-                    {
-                        if (descendant.IsLearned && descendant != excludeFromWay)
-                        {
-                            abilitiesToCheck.Add(descendant);
-                        }
-                    }
-                }
+                checkedAbilities = checkedAbilities.Concat(currentFrontier).ToList();
+                currentFrontier = currentFrontier
+                    .SelectMany(ability => ability.NeighborsModels)
+                    .Where(ability => ability.IsLearned && 
+                                      ability != excludeFromWay && 
+                                      !checkedAbilities.Contains(ability))
+                    .ToList();
             }
+
             return false;
         }
     }

@@ -24,7 +24,8 @@ namespace AbilitiesWindow.AbilityUI
             this.isStart = isStart;
         }
 
-        public HashSet<AbilityUIModel> DescendantModels { get; set; }
+        public HashSet<AbilityUIModel> NeighborsModels { get; private set; }
+        public HashSet<AbilityUIModel> DescendantModels { get; private set; }
         public bool CanLearn { get; set; }
         public bool CanForget { get; set; }
 
@@ -73,6 +74,19 @@ namespace AbilitiesWindow.AbilityUI
             if (!DescendantModels.Contains(model))
             {
                 DescendantModels.Add(model);
+            }
+        }
+
+        public void AddNeighborModel(AbilityUIModel model)
+        {
+            if (NeighborsModels == null)
+            {
+                NeighborsModels = new HashSet<AbilityUIModel>();
+            }
+
+            if (!NeighborsModels.Contains(model))
+            {
+                NeighborsModels.Add(model);
             }
         }
     }

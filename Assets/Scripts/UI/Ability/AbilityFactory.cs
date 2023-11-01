@@ -41,6 +41,7 @@ public class AbilityFactory
     {
         CreateAbilityAndDescendantsFromConfig(startAbilityConfig);
         FillModelsWithDescendantModels();
+        FillModelsWithNeighborModels();
         CreateAbilityConnectionViews();
 
         return abilitiesGridPositions.Keys;
@@ -108,6 +109,26 @@ public class AbilityFactory
                 if (config.DescendantsIds.Contains(possibleDescendantModel.Id))
                 {
                     model.AddDescendantModel(possibleDescendantModel);
+                }
+            }
+        }
+    }
+
+    private void FillModelsWithNeighborModels()
+    {
+        foreach (var model in abilityModels)
+        {
+            var abilityConfig = usedAbilityConfigs.FirstOrDefault(config => config.Id == model.Id);
+
+            foreach (var possibleNeighborModel in abilityModels)
+            {
+                var neighborConfig = usedAbilityConfigs
+                    .FirstOrDefault(config => config.Id == possibleNeighborModel.Id);
+
+                if (abilityConfig.DescendantsIds.Contains(possibleNeighborModel.Id) ||
+                    neighborConfig.DescendantsIds.Contains(abilityConfig.Id))
+                {
+                    model.AddNeighborModel(possibleNeighborModel);
                 }
             }
         }
